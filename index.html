@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carol, uma surpresa para você</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #fff7fa;
+            color: #42101f;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
+        }
+
+        body.surpresa-bloqueada {
+            overflow: hidden;
+        }
+
+        button,
+        .botao-rolar {
+            min-height: 48px;
+            padding: 12px 28px;
+            border: none;
+            border-radius: 999px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: #ff4d6d;
+            color: #ffffff;
+            box-shadow: 0 12px 22px rgba(255, 77, 109, 0.28);
+            cursor: pointer;
+            font-size: 17px;
+            font-weight: 800;
+            text-decoration: none;
+            transition: transform 0.2s, background-color 0.2s, box-shadow 0.2s;
+        }
+
+        button:hover,
+        .botao-rolar:hover {
+            transform: translateY(-2px);
+            background: #ff758f;
+            box-shadow: 0 16px 28px rgba(255, 77, 109, 0.34);
+        }
+
+        .pedido {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 28px 16px;
+            background:
+                radial-gradient(circle at 12% 18%, rgba(255, 255, 255, 0.88), transparent 28%),
+                radial-gradient(circle at 85% 12%, rgba(255, 143, 171, 0.4), transparent 24%),
+                linear-gradient(135deg, #ffe5ec, #ffb3c6 45%, #fb6f92);
+            text-align: center;
+        }
+
+        .container {
+            max-width: 430px;
+            width: 90%;
+            padding: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.75);
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.86);
+            box-shadow: 0 18px 44px rgba(143, 24, 51, 0.18);
+            backdrop-filter: blur(10px);
+            transition: all 0.5s ease;
+        }
+
+        .coracao {
+            margin-bottom: 18px;
+            font-size: 54px;
+            animation: pulsar 1.2s infinite;
+        }
+
+        h1 {
+            margin-bottom: 30px;
+            color: #d90429;
+            font-size: 28px;
+            line-height: 1.25;
+            letter-spacing: 0;
+        }
+
+        .botoes {
+            min-height: 54px;
+            display: flex;
+            justify-content: center;
+            gap: 18px;
+            position: relative;
+        }
+
+        #nao {
+            position: absolute;
+            background: #5f6470;
+            color: #ffffff;
+            box-shadow: none;
+            transition: left 0.1s ease, top 0.1s ease;
+        }
+
+        .sucesso p {
+            margin: -10px 0 24px;
+            color: #76253a;
+            font-size: 17px;
+            line-height: 1.6;
+        }
+
+        .pedido-musica {
+            margin-top: 24px;
+            padding: 16px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.58);
+            text-align: left;
+        }
+
+        .pedido-musica strong {
+            display: block;
+            margin-bottom: 10px;
+            color: #b5173b;
+            font-size: 15px;
+        }
+
+        .pedido-musica audio {
+            width: 100%;
+            height: 38px;
+        }
+
+        .surpresa {
+            display: none;
+            background: #fff7fa;
+        }
+
+        .surpresa.visivel {
+            display: block;
+        }
+
+        .site-topo {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            border-bottom: 1px solid rgba(143, 24, 51, 0.1);
+            background: rgba(255, 247, 250, 0.88);
+            backdrop-filter: blur(14px);
+        }
+
+        .barra {
+            max-width: 1080px;
+            margin: 0 auto;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+        }
+
+        .marca {
+            color: #b5173b;
+            font-size: 22px;
+            font-weight: 900;
+            letter-spacing: 0;
+        }
+
+        .menu {
+            display: flex;
+            gap: 18px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .menu a {
+            color: #682238;
+            font-size: 14px;
+            font-weight: 800;
+            text-decoration: none;
+        }
+
+        .hero {
+            min-height: 88vh;
+            display: grid;
+            align-items: center;
+            background:
+                linear-gradient(rgba(62, 8, 25, 0.16), rgba(62, 8, 25, 0.28)),
+                url("foto-principal.jpg") center/cover,
+                linear-gradient(135deg, #ffd6e0, #ff8fab 48%, #c9184a);
+        }
+
+        .hero-interno {
+            width: min(1080px, calc(100% - 36px));
+            margin: 0 auto;
+            padding: 78px 0;
+            color: #ffffff;
+            text-align: left;
+        }
+
+        .selo {
+            width: fit-content;
+            margin-bottom: 18px;
+            padding: 9px 14px;
+            border: 1px solid rgba(255, 255, 255, 0.36);
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.18);
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: 800;
+        }
+
+        .hero h2 {
+            max-width: 760px;
+            margin-bottom: 18px;
+            font-size: clamp(42px, 7vw, 76px);
+            line-height: 0.98;
+            letter-spacing: 0;
+            text-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+        }
+
+        .hero p {
+            max-width: 640px;
+            margin-bottom: 28px;
+            font-size: 20px;
+            line-height: 1.6;
+            text-shadow: 0 8px 18px rgba(0, 0, 0, 0.16);
+        }
+
+        .secao {
+            padding: 82px 20px;
+        }
+
+        .secao:nth-child(even) {
+            background: #ffffff;
+        }
+
+        .conteudo {
+            width: min(1080px, 100%);
+            margin: 0 auto;
+        }
+
+        .cabecalho-secao {
+            max-width: 740px;
+            margin-bottom: 34px;
+        }
+
+        .etiqueta {
+            margin-bottom: 10px;
+            color: #ff4d6d;
+            font-size: 14px;
+            font-weight: 900;
+            letter-spacing: 0;
+            text-transform: uppercase;
+        }
+
+        .cabecalho-secao h2 {
+            margin-bottom: 12px;
+            color: #b5173b;
+            font-size: clamp(30px, 5vw, 48px);
+            line-height: 1.05;
+        }
+
+        .cabecalho-secao p {
+            color: #6e2a3f;
+            font-size: 18px;
+            line-height: 1.7;
+        }
+
+        .contador {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 14px;
+        }
+
+        .tempo-card,
+        .card,
+        .musica,
+        .declaracao {
+            border: 1px solid rgba(255, 77, 109, 0.16);
+            border-radius: 8px;
+            background: #ffffff;
+            box-shadow: 0 16px 34px rgba(143, 24, 51, 0.1);
+        }
+
+        .tempo-card {
+            min-height: 118px;
+            padding: 20px 12px;
+            display: grid;
+            place-items: center;
+            text-align: center;
+        }
+
+        .tempo-card strong {
+            color: #d90429;
+            font-size: clamp(28px, 4vw, 42px);
+            line-height: 1;
+        }
+
+        .tempo-card span {
+            margin-top: 8px;
+            color: #793047;
+            font-size: 13px;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .galeria {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+        }
+
+        .foto {
+            min-height: 330px;
+            overflow: hidden;
+            position: relative;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #ffd6e0, #ff8fab);
+            box-shadow: 0 16px 34px rgba(143, 24, 51, 0.12);
+        }
+
+        .foto img {
+            width: 100%;
+            height: 100%;
+            display: block;
+            object-fit: cover;
+        }
+
+        .foto-placeholder {
+            position: absolute;
+            inset: 0;
+            display: grid;
+            place-items: center;
+            padding: 28px;
+            color: #ffffff;
+            font-size: 20px;
+            font-weight: 900;
+            line-height: 1.35;
+            text-align: center;
+        }
+
+        .musica {
+            padding: 28px;
+        }
+
+        .musica-grid {
+            display: grid;
+            grid-template-columns: 120px 1fr;
+            gap: 22px;
+            align-items: center;
+        }
+
+        .capa-musica {
+            width: 120px;
+            aspect-ratio: 1;
+            border-radius: 8px;
+            display: grid;
+            place-items: center;
+            background: linear-gradient(135deg, #ff4d6d, #c9184a);
+            color: #ffffff;
+            font-size: 42px;
+            box-shadow: 0 14px 28px rgba(201, 24, 74, 0.24);
+        }
+
+        .musica h3 {
+            margin-bottom: 8px;
+            color: #b5173b;
+            font-size: 24px;
+        }
+
+        .musica p {
+            margin-bottom: 16px;
+            color: #753049;
+            line-height: 1.6;
+        }
+
+        audio {
+            width: 100%;
+            accent-color: #ff4d6d;
+        }
+
+        .spotify-player {
+            width: 100%;
+            height: 152px;
+            border: 0;
+            border-radius: 8px;
+            display: block;
+        }
+
+        .linha-tempo {
+            display: grid;
+            gap: 18px;
+        }
+
+        .momento {
+            display: grid;
+            grid-template-columns: 74px 1fr;
+            gap: 18px;
+            align-items: start;
+            padding: 24px;
+            opacity: 0;
+            transform: translateY(32px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+
+        .momento.aparecer {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .momento-numero {
+            width: 62px;
+            height: 62px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #ff4d6d;
+            color: #ffffff;
+            font-size: 26px;
+            font-weight: 900;
+            box-shadow: 0 10px 18px rgba(255, 77, 109, 0.28);
+        }
+
+        .momento h3 {
+            margin-bottom: 8px;
+            color: #b5173b;
+            font-size: 23px;
+        }
+
+        .momento p {
+            color: #6f2639;
+            font-size: 17px;
+            line-height: 1.7;
+        }
+
+        .declaracao {
+            padding: clamp(28px, 5vw, 54px);
+            background:
+                linear-gradient(rgba(255, 255, 255, 0.93), rgba(255, 255, 255, 0.93)),
+                linear-gradient(135deg, #ffd6e0, #ff8fab);
+            text-align: center;
+        }
+
+        .declaracao p {
+            max-width: 820px;
+            margin: 0 auto 18px;
+            color: #5c1f33;
+            font-size: clamp(20px, 3vw, 29px);
+            line-height: 1.55;
+        }
+
+        .assinatura {
+            margin-top: 28px;
+            color: #d90429;
+            font-size: 24px;
+            font-weight: 900;
+        }
+
+        .final-site {
+            padding: 72px 20px;
+            background: #b5173b;
+            color: #ffffff;
+            text-align: center;
+        }
+
+        .final-site h2 {
+            margin-bottom: 14px;
+            font-size: clamp(32px, 5vw, 54px);
+            line-height: 1.06;
+        }
+
+        .final-site p {
+            max-width: 620px;
+            margin: 0 auto;
+            font-size: 19px;
+            line-height: 1.7;
+        }
+
+        @keyframes pulsar {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+            100% { transform: scale(1); }
+        }
+
+        @media (max-width: 840px) {
+            .barra {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .menu {
+                justify-content: flex-start;
+            }
+
+            .contador,
+            .galeria {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .hero {
+                min-height: 82vh;
+            }
+        }
+
+        @media (max-width: 620px) {
+            .container {
+                padding: 30px 22px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .contador,
+            .galeria,
+            .musica-grid,
+            .momento {
+                grid-template-columns: 1fr;
+            }
+
+            .tempo-card {
+                min-height: 98px;
+            }
+
+            .foto {
+                min-height: 260px;
+            }
+
+            .capa-musica,
+            .momento-numero {
+                margin: 0 auto;
+            }
+
+            .musica,
+            .momento {
+                text-align: center;
+            }
+
+            .secao {
+                padding: 62px 16px;
+            }
+        }
+    </style>
+</head>
+<body class="surpresa-bloqueada">
+    <main>
+        <section class="pedido" id="pedido">
+            <div class="container" id="conteudo">
+                <div class="coracao">❤️</div>
+                <h1>Carol, quer namorar comigo?</h1>
+                <div class="botoes">
+                    <button id="sim" onclick="aceitou()">Sim</button>
+                    <button id="nao" onmouseover="fuga()" onclick="fuga()">Não</button>
+                </div>
+                <div class="pedido-musica">
+                    <strong>Ambatukam - Luckhaos</strong>
+                    <audio class="audio-romantico" controls loop preload="auto">
+                        <source src="ambatukam-luckhaos.mp3" type="audio/mpeg">
+                        Seu navegador não conseguiu tocar a música.
+                    </audio>
+                </div>
+            </div>
+        </section>
+
+        <section class="surpresa" id="surpresa">
+            <header class="site-topo">
+                <div class="barra">
+                    <div class="marca">Carol & Eu</div>
+                    <nav class="menu" aria-label="Navegação da surpresa">
+                        <a href="#tempo">Nosso tempo</a>
+                        <a href="#fotos">Fotos</a>
+                        <a href="#musica">Música</a>
+                        <a href="#historia">História</a>
+                        <a href="#carta">Carta</a>
+                    </nav>
+                </div>
+            </header>
+
+            <section class="hero" id="inicio">
+                <div class="hero-interno">
+                    <div class="selo">Uma página feita só para você</div>
+                    <h2>Carol, essa carta de amor tem o seu nome.</h2>
+                    <p>
+                        Guardei aqui um pouco do que eu sinto: nosso tempo, nossas lembranças,
+                        uma música especial e palavras que eu queria te entregar de um jeito bonito.
+                    </p>
+                    <a class="botao-rolar" href="#tempo">Começar</a>
+                </div>
+            </section>
+
+            <section class="secao" id="tempo">
+                <div class="conteudo">
+                    <div class="cabecalho-secao">
+                        <div class="etiqueta">Contador</div>
+                        <h2>Desde o dia em que eu me apaixonei.</h2>
+                        <p>
+                            14/05/2026 foi o dia em que a gente se conheceu e eu me apaixonei.
+                            Desde então, cada segundo virou parte dessa história.
+                        </p>
+                    </div>
+
+                    <div class="contador" aria-label="Contador de tempo juntos">
+                        <div class="tempo-card"><strong id="anos">0</strong><span>Anos</span></div>
+                        <div class="tempo-card"><strong id="meses">0</strong><span>Meses</span></div>
+                        <div class="tempo-card"><strong id="dias">0</strong><span>Dias</span></div>
+                        <div class="tempo-card"><strong id="horas">0</strong><span>Horas</span></div>
+                        <div class="tempo-card"><strong id="minutos">0</strong><span>Minutos</span></div>
+                        <div class="tempo-card"><strong id="segundos">0</strong><span>Segundos</span></div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="secao" id="fotos">
+                <div class="conteudo">
+                    <div class="cabecalho-secao">
+                        <div class="etiqueta">Álbum</div>
+                        <h2>Algumas memórias merecem morar aqui.</h2>
+                        <p>
+                            Separei imagens com um clima romântico para deixar essa parte ainda mais especial.
+                        </p>
+                    </div>
+
+                    <div class="galeria">
+                        <div class="foto">
+                            <img src="https://i.pinimg.com/1200x/ca/33/69/ca336936fb865c7e6c0ae3ac7ca1d0da.jpg" alt="Imagem romântica especial" onerror="this.style.display='none'">
+                            <div class="foto-placeholder">Coloque aqui uma foto de vocês dois</div>
+                        </div>
+                        <div class="foto">
+                            <img src="https://i.pinimg.com/736x/7a/97/cd/7a97cdc150eac0a0fca25d2f2110c87c.jpg" alt="Imagem romântica de lembrança" onerror="this.style.display='none'">
+                            <div class="foto-placeholder">Uma lembrança que faz sorrir</div>
+                        </div>
+                        <div class="foto">
+                            <img src="https://i.pinimg.com/736x/bb/04/f6/bb04f6e2327a28812693a3b93635ee45.jpg" alt="Imagem romântica inesquecível" onerror="this.style.display='none'">
+                            <div class="foto-placeholder">Outro momento inesquecível</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="secao" id="musica">
+                <div class="conteudo">
+                    <div class="cabecalho-secao">
+                        <div class="etiqueta">Trilha sonora</div>
+                        <h2>A música que combina com a gente.</h2>
+                        <p>Coloque o arquivo da música na pasta com o nome white-keys-dominic-fike.mp3.</p>
+                    </div>
+
+                    <div class="musica">
+                        <div class="musica-grid">
+                            <div class="capa-musica">♪</div>
+                            <div>
+                                <h3>White Keys - Dominic Fike</h3>
+                                <p>Essa é a música escolhida para deixar a surpresa com a sua cara.</p>
+                                <audio id="musicaEspecial" controls loop preload="auto">
+                                    <source src="white-keys-dominic-fike.mp3" type="audio/mpeg">
+                                    Seu navegador não conseguiu tocar a música.
+                                </audio>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="secao" id="historia">
+                <div class="conteudo">
+                    <div class="cabecalho-secao">
+                        <div class="etiqueta">Momentos</div>
+                        <h2>A nossa linha do tempo.</h2>
+                        <p>Conforme ela for descendo, cada parte aparece devagar, como se fosse abrindo uma lembrança por vez.</p>
+                    </div>
+
+                    <div class="linha-tempo">
+                        <article class="card momento">
+                            <div class="momento-numero">1</div>
+                            <div>
+                                <h3>Quando penso em você</h3>
+                                <p>Meu dia fica mais leve, meu sorriso aparece sem pedir licença e tudo parece ter um brilho diferente.</p>
+                            </div>
+                        </article>
+
+                        <article class="card momento">
+                            <div class="momento-numero">2</div>
+                            <div>
+                                <h3>O seu jeito</h3>
+                                <p>Tem algo em você que acalma, encanta e prende minha atenção de um jeito que eu nem tento explicar.</p>
+                            </div>
+                        </article>
+
+                        <article class="card momento">
+                            <div class="momento-numero">3</div>
+                            <div>
+                                <h3>Minha vontade</h3>
+                                <p>Eu quero estar do seu lado nos dias bons, nos dias difíceis e em todos os momentos pequenos que viram lembrança.</p>
+                            </div>
+                        </article>
+
+                        <article class="card momento">
+                            <div class="momento-numero">4</div>
+                            <div>
+                                <h3>Se você aceitar</h3>
+                                <p>Prometo cuidar de você com carinho, respeito e presença, porque você merece um amor bonito de verdade.</p>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            </section>
+
+            <section class="secao" id="carta">
+                <div class="conteudo">
+                    <div class="declaracao momento">
+                        <p>
+                            Carol, talvez nenhuma página consiga explicar tudo, mas eu queria que você soubesse:
+                            você é especial para mim de um jeito que eu quero cuidar, viver e escolher todos os dias.
+                        </p>
+                        <p>
+                            Se você aceitar, eu quero construir uma história leve, verdadeira e cheia de carinho com você.
+                        </p>
+                        <div class="assinatura">Com amor, de quem quer te fazer feliz ❤️</div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="final-site">
+                <h2>Então... aceita viver essa história comigo?</h2>
+                <p>Essa surpresa é só o começo. O resto eu quero escrever ao seu lado.</p>
+            </section>
+        </section>
+    </main>
+
+    <script>
+        const btnNao = document.getElementById('nao');
+        const container = document.getElementById('conteudo');
+        const surpresa = document.getElementById('surpresa');
+        const momentos = document.querySelectorAll('.momento');
+
+        const dataInicio = new Date('2026-05-14T00:00:00');
+
+        btnNao.style.left = '55%';
+
+        function fuga() {
+            const larguraTela = window.innerWidth;
+            const alturaTela = window.innerHeight;
+            const limiteX = larguraTela - btnNao.offsetWidth - 20;
+            const limiteY = alturaTela - btnNao.offsetHeight - 20;
+            const novoX = Math.random() * limiteX;
+            const novoY = Math.random() * limiteY;
+
+            btnNao.style.position = 'fixed';
+            btnNao.style.left = novoX + 'px';
+            btnNao.style.top = novoY + 'px';
+        }
+
+        function aceitou() {
+            container.classList.add('sucesso');
+            container.innerHTML = `
+                <div class="coracao">💖✨</div>
+                <h1>Sabia que diria SIM! <br>Te amo! 🥰</h1>
+                <p>Agora eu tenho uma surpresa feita só para você.</p>
+                <div class="pedido-musica">
+                    <strong>Ambatukam - Luckhaos</strong>
+                    <audio class="audio-romantico" controls loop preload="auto">
+                        <source src="ambatukam-luckhaos.mp3" type="audio/mpeg">
+                        Seu navegador não conseguiu tocar a música.
+                    </audio>
+                </div>
+                <button class="botao-rolar" onclick="mostrarSurpresa()">Ver surpresa</button>
+            `;
+            configurarMusicas();
+            tocarMusicaPedido();
+        }
+
+        function mostrarSurpresa() {
+            document.body.classList.remove('surpresa-bloqueada');
+            surpresa.classList.add('visivel');
+            surpresa.scrollIntoView({ behavior: 'smooth' });
+            atualizarContador();
+            tocarMusica();
+        }
+
+        function tocarMusica() {
+            const musica = document.getElementById('musicaEspecial');
+            if (!musica) return;
+
+            silenciarMusicaPedido();
+            musica.volume = 0.5;
+            musica.loop = true;
+            musica.play().catch(() => {
+                musica.controls = true;
+            });
+        }
+
+        function silenciarMusicaPedido() {
+            document.querySelectorAll('.pedido .audio-romantico').forEach((musica) => {
+                musica.pause();
+                musica.currentTime = 0;
+            });
+        }
+
+        function tocarMusicaPedido() {
+            const musica = document.querySelector('.pedido .audio-romantico');
+            if (!musica) return;
+
+            musica.volume = 0.5;
+            musica.loop = true;
+            musica.play().catch(() => {
+                musica.controls = true;
+            });
+        }
+
+        function configurarMusicas() {
+            document.querySelectorAll('audio').forEach((musica) => {
+                musica.volume = 0.5;
+                musica.loop = true;
+            });
+
+            document.querySelectorAll('.pedido .audio-romantico').forEach((musica) => {
+                musica.addEventListener('play', () => {
+                    const musicaSurpresa = document.getElementById('musicaEspecial');
+                    if (musicaSurpresa) musicaSurpresa.pause();
+                });
+            });
+
+            const musicaSurpresa = document.getElementById('musicaEspecial');
+            if (musicaSurpresa) {
+                musicaSurpresa.addEventListener('play', silenciarMusicaPedido);
+            }
+        }
+
+        function atualizarContador() {
+            const agora = new Date();
+            let diferenca = Math.max(0, agora - dataInicio);
+
+            const segundosTotal = Math.floor(diferenca / 1000);
+            const anos = Math.floor(segundosTotal / (365 * 24 * 60 * 60));
+            diferenca -= anos * 365 * 24 * 60 * 60 * 1000;
+
+            const meses = Math.floor(diferenca / (30 * 24 * 60 * 60 * 1000));
+            diferenca -= meses * 30 * 24 * 60 * 60 * 1000;
+
+            const dias = Math.floor(diferenca / (24 * 60 * 60 * 1000));
+            diferenca -= dias * 24 * 60 * 60 * 1000;
+
+            const horas = Math.floor(diferenca / (60 * 60 * 1000));
+            diferenca -= horas * 60 * 60 * 1000;
+
+            const minutos = Math.floor(diferenca / (60 * 1000));
+            diferenca -= minutos * 60 * 1000;
+
+            const segundos = Math.floor(diferenca / 1000);
+
+            document.getElementById('anos').textContent = anos;
+            document.getElementById('meses').textContent = meses;
+            document.getElementById('dias').textContent = dias;
+            document.getElementById('horas').textContent = horas;
+            document.getElementById('minutos').textContent = minutos;
+            document.getElementById('segundos').textContent = segundos;
+        }
+
+        const observador = new IntersectionObserver((entradas) => {
+            entradas.forEach((entrada) => {
+                if (entrada.isIntersecting) {
+                    entrada.target.classList.add('aparecer');
+                }
+            });
+        }, { threshold: 0.22 });
+
+        momentos.forEach((momento) => observador.observe(momento));
+        configurarMusicas();
+        setInterval(atualizarContador, 1000);
+    </script>
+</body>
+</html>
